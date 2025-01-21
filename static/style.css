@@ -1,0 +1,72 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: rgb(200, 200, 200);
+    margin: 0;
+    padding: 0;
+}
+
+.content {
+    width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 1);
+    text-align: center;
+}
+
+h1, h3 {
+    color: navy;
+    cursor: default;
+}
+
+h1 {
+    text-decoration: underline;
+}
+
+/* I think this table should be re-written as a div and label it as rows/columns like so:
+    <!-- https://dev.to/flippedcoding/how-to-make-a-table-without-using-the-html-table-elements-5e11 -->
+    */
+table {
+    
+    /* padding: 5px; */
+    /* display: flex; */
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+        padding: 10px;
+        border: 1px solid black
+    }
+}
+
+a {
+    display: inline-block;
+    padding: 8px 16px;
+    margin: 5px;
+    border-radius: 20px;
+    background-color: #888;
+    color: #fff;
+    text-decoration: none;
+    transition: #888 0.3s ease;
+
+    &:hover {
+        background-color: navy;
+    }
+}
+
+input {
+    padding: 10px;
+    margin: 5px;
+    border: solid 1px;
+    border-radius: 5px;
+}
+
+/* .content_row {
+    padding: 5px;
+    ;
+}
+
+.header_row {
+    padding: 5px;
+} */
