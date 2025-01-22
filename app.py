@@ -4,6 +4,7 @@ from flask_scss import Scss
 from flask_sqlalchemy import SQLAlchemy 
 from datetime import datetime
 import requests
+import json
 
 #My App
 app = Flask(__name__)
@@ -12,9 +13,39 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 db = SQLAlchemy(app)
 
 
+#Get the latest high and low prices for the items that we have data for,
+# and the Unix timestamp when that transaction took place. 
+# Map from itemId (see here for a reference) to an object of {high, highTime, low, lowTime}. 
+# If we've never seen an item traded, it won't be in the response.
+# If we've never seen an instant-buy price, then high and highTime will be null 
+# (and similarly for low and lowTime if we've never seen an instant-sell). 
+# 
+
+
+#This model is meant to hold the data from /latest.
+# That is, for each id: {high, highTime, low, lowTime}
+class LatestModel(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    high = db.Column(db.Integer)
+    highTime = db.Column(db.DateTime)
+    low = db.Column(db.Integer)
+    lowTime = db.Column(db.DateTime)
+    fetched_date = db.Column(db.DateTime, default=datetime.now)
+
+    def __repr__(self) -> str:
+        return f"Task {self.id}"
+
 #Testing to verify I can get the output from the API and display it in my HTML
 @app.route("/latest", methods=["GET"])
 def latest():
+
+    # Does it make sense to split this up like the other function below where we have an if/else to split GET/POST?
+    #We should make separate functions - one that we can call easily just to get the latest data.
+    #Another to take that data and store it.
+    #We'll do that for all of the possible API's - write my own API to completely consume this one.
+    #After that, we can build the app to actually use this API as we see fit.
+
+
 
     base_request_url = 'https://prices.runescape.wiki/api/v1/osrs'
     url = base_request_url + "/latest"
@@ -26,7 +57,17 @@ def latest():
 
     response = requests.get(url, headers=headers)
 
-    return render_template("latest.html", response=response.text)
+    #TODO: Read into LatestModel and store in the DB.
+
+    data = response.json()
+    #I have a dictionary, and we're turning it into a string with json.dumps()
+    parsed = json.dumps(data)
+
+    print(f"parsed: {parsed}")
+
+    
+
+    return render_template("latest.html", response=parsed)
 
 
 # We're going to need to store our mapped data in the db so we know which items we're dealing with:
